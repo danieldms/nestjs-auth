@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
-import { PASSWORD_SALT } from 'src/config';
 const bcrypt = require('bcrypt');
 
 @Entity({name: 'users'})
