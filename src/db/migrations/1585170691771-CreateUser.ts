@@ -5,7 +5,7 @@ export class CreateUser1585170691771 implements MigrationInterface {
     name: 'users',
     columns: [
       {
-        name: 'uuid',
+        name: 'id',
         type: 'varchar',
         length: '255',
         isPrimary: true,
