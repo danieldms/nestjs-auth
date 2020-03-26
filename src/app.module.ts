@@ -3,11 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './users/user.module';
 import { Connection } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
+import RepoModule from './shared/repo.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     UserModule,
+    RepoModule,
     AuthModule
   ],
   controllers: [],

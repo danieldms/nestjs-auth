@@ -1,20 +1,19 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "./user.entity";
+import { UserEntity } from "../db/models/user.entity";
 import { Repository } from "typeorm";
 import { CreateUser } from "../dto/user.dto";
 import { validate } from "class-validator";
+import RepoService from "src/shared/repo.service";
 
 @Injectable()
 export class UsersService {
 	constructor(
-		@InjectRepository(UserEntity)
-		private readonly repo: Repository<UserEntity>
-	) {
-	}
+		private readonly repoService: RepoService
+	) { }
 
 	async findAll(where?: any): Promise<UserEntity[]> {
-		const users = await this.repo.find({
+		const users = await this.repoService.userRepo.find({
 			where
 		});
 
@@ -22,12 +21,12 @@ export class UsersService {
 	}
 
 	async findByEmail(email: string): Promise<any> {
-		const user = await this.repo.findOne({ email: email });
+		const user = await this.repoService.userRepo.findOne({ email: email });
 		return user;
 	}
 
 	async findById(id: string): Promise<any> {
-		const user = await this.repo.findOne(id);
+		const user = await this.repoService.userRepo.findOne(id);
 
 		if (!user) {
 			const errors = { User: 'not found' };
@@ -42,7 +41,7 @@ export class UsersService {
 
 		const { email } = user;
 
-		const qb = await this.repo.findOne({ email: email });
+		const qb = await this.repoService.userRepo.findOne({ email: email });
 
 		if (qb) {
 			const errors = { email: 'Email must be unique.' };
@@ -55,23 +54,23 @@ export class UsersService {
 			throw new HttpException({ message: 'Input data validation failed', _errors }, HttpStatus.BAD_REQUEST);
 		}
 
-		const _user = await this.repo.save(user);
+		const _user = await this.repoService.userRepo.save(user);
 
 		return this.sanitize(_user);
 	}
 
 	async update(id: string, data: any) {
-		const userToUpdated = await this.repo.findOne(id);
+		const userToUpdated = await this.repoService.userRepo.findOne(id);
 
 		delete userToUpdated.password;
 
 		let updated = Object.assign(userToUpdated, data);
 
-		return await this.repo.save(userToUpdated);
+		return await this.repoService.userRepo.save(userToUpdated);
 	}
 
 	async delete(id: string) {
-		const result = await this.repo.delete(id);
+		const result = await this.repoService.userRepo.delete(id);
 
 		return { data: result };
 	}
