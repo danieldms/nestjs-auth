@@ -22,7 +22,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() data: RegisterDto) {
-    return data;
+    return this.authService.register(data);
   }
 
   @UseGuards(JwtAuthGuard)
